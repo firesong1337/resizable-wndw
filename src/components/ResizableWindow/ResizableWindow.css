@@ -1,0 +1,45 @@
+.resizable-ctn {
+    display:grid;
+    border: 1px solid black;
+    width: 400px;
+    height: 400px;
+    grid-template-areas: 
+    "tl t tr"
+    "l cont r"
+    "bl b br";
+    grid-template-rows: 10px auto 10px;
+    grid-template-columns: 10px auto 10px;
+}
+.resizable-tl {
+    grid-area: "tl";
+}
+.resizable-t {
+    grid-area: "t";
+}
+.resizable-tr {
+    grid-area: "tr";
+}
+.resizable-l {
+    grid-area: "l";
+}
+.content-ctn {
+    grid-area: "cont";
+}
+.resizable-r {
+    grid-area: "r";
+}
+.resizable-bl {
+    grid-area: "bl";
+}
+.resizable-b {
+    grid-area: "b";
+}
+.resizable-br {
+    grid-area: "br";
+}
+.resizable-l, .resizable-t, .resizable-r, .resizable-b {
+    background-color: dimgrey;
+}
+.resizable-tl, .resizable-tr, .resizable-bl, .resizable-br {
+    background-color:chartreuse;
+}
