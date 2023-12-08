@@ -1,53 +1,9 @@
+
 import { useState, useRef, useEffect } from 'react'
 import './ResizableWindow.css'
 
 export const ResizableWindow = () => {
-    /*
-    const resizableCtn= useRef(null)
-    const resizableTopLeft = useRef(null)
-    const resizableTop = useRef(null)
-    const resizableTopRight = useRef(null)
-    const resizableLeft = useRef(null)
-    const resizableRight = useRef(null)
-    const resizableBotLeft = useRef(null)
-    const resizableBotRight = useRef(null)
-    const resizableBot = useRef(null)
-    const resizableContentCtn = useRef(null)
-
-    const [isResizing, setIsResizing] = useState(false);
-
-    const handleMouseDown = (e) => {
-        setIsResizing(true);
-      };
-    
-      const handleMouseMove = (e) => {
-        if (isResizing) {
-            
-          const newWidth = e.clientX - resizableCtn.current.getBoundingClientRect().left;
-          const newWidth2 = e.clientX - resizableContentCtn.current.getBoundingClientRect().left;
-          resizableCtn.current.style.width = `${newWidth}px`;
-          resizableContentCtn.current.style.width = `${newWidth2}px`;
-        }
-      };
-    
-      const handleMouseUp = () => {
-        setIsResizing(false);
-      };
-    
-      useEffect(() => {
-        const cleanup = () => {
-          document.removeEventListener('mousemove', handleMouseMove);
-          document.removeEventListener('mouseup', handleMouseUp);
-        };
-    
-        if (isResizing) {
-          document.addEventListener('mousemove', handleMouseMove);
-          document.addEventListener('mouseup', handleMouseUp);
-        }
-    
-        return cleanup;
-      }, [isResizing]);*/
-      const resizableCtn = useRef(null);
+  const resizableCtn = useRef(null);
   const resizableTopLeft = useRef(null);
   const resizableTop = useRef(null);
   const resizableTopRight = useRef(null);
@@ -61,44 +17,42 @@ export const ResizableWindow = () => {
   const [resizeParams, setResizeParams] = useState({
     isResizing: false,
     direction: null,
-    startX: 0,
-    startY: 0,
+    startX: 0
   });
+  const [stateX, setStateX] = useState(0)
   
   const handleMouseDown = (direction, e) => {
     setResizeParams({
       isResizing: true,
       direction: direction,
-      startX: e.clientX,
-      startY: e.clientY,
+      startX: e.clientX
     });
-    console.log("bounding right 1: ",resizableCtn.current.getBoundingClientRect().right)
   };
 
+  
+  let x = 0
   const handleMouseMove = (e) => {
-    let newWidth = 0
-    let newHeight = 0
-    let startWidth =  resizableCtn.current.offsetWidth;
-    console.log(startWidth)
+    const minimum_size = 50
+    
     if (resizeParams.isResizing) {
-        console.log("Start X: ",resizeParams.startX)
-        console.log("bounding right: ",resizableCtn.current.getBoundingClientRect().right)
-
-        const deltaX = e.clientX - resizeParams.startX;
-        const deltaY = e.clientY - resizeParams.startY;
-        console.log("deltaX: ",deltaX)
-
+      let deltaX = e.clientX - x
+      x = e.clientX
         switch (resizeParams.direction) {
             case 'left':
-                newWidth = resizableCtn.current.getBoundingClientRect().left + deltaX;
-                resizableCtn.current.style.width = `${newWidth}px`;
-                resizableCtn.current.style.left = `${deltaX}px`
+                let newWidth1 = resizableCtn.current.getBoundingClientRect().width - deltaX
+                let newLeft1 = resizableCtn.current.getBoundingClientRect().left + deltaX
+                if (newWidth1 > minimum_size && newLeft1 >= 0) {
+                  resizableCtn.current.style.width = `${newWidth1}px`;
+                  resizableCtn.current.style.left = `${newLeft1}px`
+
+                  console.log("newWidth: ", resizableCtn.current.style.width, "newLeft: ", resizableCtn.current.style.left)
+                }
                 break;
             case 'right':
-                //newWidth = resizeParams.startX + deltaX;
-                //newWidth = resizableCtn.current.getBoundingClientRect().right + deltaX;
-                newWidth = resizableCtn.current.offsetWidth + deltaX;
-                resizableCtn.current.style.width = `${newWidth}px`;
+                const newWidth = e.clientX - resizableCtn.current.getBoundingClientRect().left
+                if (newWidth > minimum_size) {
+                  resizableCtn.current.style.width = `${newWidth}px`;
+                }
                 break;
                 /*
             case 'bottom':
@@ -112,28 +66,24 @@ export const ResizableWindow = () => {
                 resizableCtn.current.style.height = `${newHeight}px`;
                 break;*/
         }
-    }
+      }
     
   };
 
   const handleMouseUp = () => {
     setResizeParams({
       isResizing: false,
-      direction: null,
-      startX: 0,
-      startY: 0,
+      direction: null
     });
   };
 
   useEffect(() => {
     const cleanup = () => {
-      // Cleanup event listeners when the component unmounts
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
 
     if (resizeParams.isResizing) {
-      // Add event listeners when the component mounts
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
     }
@@ -160,3 +110,4 @@ export const ResizableWindow = () => {
     </div>
     )
 }
+
