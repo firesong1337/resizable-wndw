@@ -1,5 +1,5 @@
 import { useResizable } from './useResizable';
-import { useState, useRef, useEffect } from 'react'
+import { useRef } from 'react'
 import './ResizableWindow.css'
 
 export const ResizableWindow = () => {
