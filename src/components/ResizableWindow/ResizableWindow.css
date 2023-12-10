@@ -1,61 +1,74 @@
 .resizable-ctn {
-    display:grid;
+    display: grid;
     width: 400px;
     height: 400px;
-    grid-template-areas: 
-    "tl t tr"
-    "l cont r"
-    "bl b br";
+    grid-template-areas:
+      "tl t tr"
+      "l cont r"
+      "bl b br";
     grid-template-rows: 10px auto 10px;
     grid-template-columns: 10px auto 10px;
     position: absolute;
-}
-.resizable-tl {
+  }
+  
+  .resizable {
+    user-select: none;
+  }
+  
+  /* Видос в беседе */
+  .resizable-tl {
     grid-area: "tl";
     cursor: nwse-resize;
-}
-.resizable-t {
+  }
+  .resizable-t {
     grid-area: "t";
-    cursor:ns-resize;
-}
-.resizable-tr {
+    cursor: ns-resize;
+  }
+  .resizable-tr {
     grid-area: "tr";
     cursor: nesw-resize;
-}
-.resizable-l {
+  }
+  .resizable-l {
     grid-area: "l";
-    cursor:ew-resize;
-}
-.content-ctn {
+    cursor: ew-resize;
+  }
+  .content-ctn {
     grid-area: "cont";
     background-color: aquamarine;
     margin: 20px;
-}
-.resizable-r {
+  }
+  .resizable-r {
     grid-area: "r";
-    cursor:ew-resize;
-}
-.resizable-bl {
+    cursor: ew-resize;
+  }
+  .resizable-bl {
     grid-area: "bl";
     cursor: nesw-resize;
-}
-.resizable-b {
+  }
+  .resizable-b {
     grid-area: "b";
-    cursor:ns-resize;
-}
-.resizable-br {
+    cursor: ns-resize;
+  }
+  .resizable-br {
     grid-area: "br";
     cursor: nwse-resize;
-}
-.resizable-l, .resizable-t, .resizable-r, .resizable-b {
+  }
+  .resizable-l,
+  .resizable-t,
+  .resizable-r,
+  .resizable-b {
     background-color: dimgrey;
-}
-.resizable-tl, .resizable-tr, .resizable-bl, .resizable-br {
-    background-color:chartreuse;
-}
-.brick {
+  }
+  .resizable-tl,
+  .resizable-tr,
+  .resizable-bl,
+  .resizable-br {
+    background-color: chartreuse;
+  }
+  .brick {
     background-color: red;
     width: 10%;
     height: 10%;
     margin: 10px;
-}
+  }
+  

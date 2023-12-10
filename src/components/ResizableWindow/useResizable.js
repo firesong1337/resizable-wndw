@@ -1,7 +1,10 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from "react";
 
+// minSize разбить на minWidth/Height и maxWidth/Height
 export const useResizable = (minSize = 150) => {
   const resizableCtn = useRef(null);
+
+  // попытаться отказаться от useState
   const [resizeParams, setResizeParams] = useState({
     isResizing: false,
     direction: null,
@@ -13,103 +16,66 @@ export const useResizable = (minSize = 150) => {
       direction: direction,
     });
   };
-
-  let x = 0;
-  let y = 0;
-  const handleMouseMove = (e) => {
-    let newWidth = 0
-    let newHeight = 0
-    let leftOffSet = 0
-    let topOffSet = 0
-    if (resizeParams.isResizing) {
-      const deltaX = e.clientX - x;
-      x = e.clientX;
-
-      const deltaY = e.clientY - y;
-      y = e.clientY;
-
-      switch (resizeParams.direction) {
-        case 'left':
-                newWidth = resizableCtn.current.getBoundingClientRect().width - deltaX
-                leftOffSet = resizableCtn.current.getBoundingClientRect().left + deltaX
-                if (newWidth >= minSize && leftOffSet > 0) {
-                  resizableCtn.current.style.width = `${newWidth}px`;
-                  resizableCtn.current.style.left = `${leftOffSet}px`
-
-                  console.log("newWidth: ", resizableCtn.current.style.width, "newLeft: ", resizableCtn.current.style.left)
-                }
-                break;
-            case 'right':
-                newWidth = e.clientX - resizableCtn.current.getBoundingClientRect().left
-                if (newWidth >= minSize) {
-                  resizableCtn.current.style.width = `${newWidth}px`;
-                }
-                break;
-            case 'top':
-                newHeight = resizableCtn.current.getBoundingClientRect().height - deltaY
-                topOffSet = resizableCtn.current.getBoundingClientRect().top + deltaY
-                if (newHeight >= minSize && topOffSet > 0) {
-                  resizableCtn.current.style.height = `${newHeight}px`;
-                  resizableCtn.current.style.top = `${topOffSet}px`
-                }
-                break;
-            case 'bottom':
-                newHeight = e.clientY - resizableCtn.current.getBoundingClientRect().top
-                if (newHeight >= minSize) {
-                  resizableCtn.current.style.height = `${newHeight}px`;
-                }
-                break;
-            case 'top-left':
-                newWidth = resizableCtn.current.getBoundingClientRect().width - deltaX
-                leftOffSet = resizableCtn.current.getBoundingClientRect().left + deltaX
-                if (newWidth >= minSize && leftOffSet > 0) {
-                  resizableCtn.current.style.width = `${newWidth}px`;
-                  resizableCtn.current.style.left = `${leftOffSet}px`
-                }
-                newHeight = resizableCtn.current.getBoundingClientRect().height - deltaY
-                topOffSet = resizableCtn.current.getBoundingClientRect().top + deltaY
-                if (newHeight >= minSize && topOffSet > 0) {
-                  resizableCtn.current.style.height = `${newHeight}px`;
-                  resizableCtn.current.style.top = `${topOffSet}px`
-                }
-                break;
-            case 'bottom-left':
-                newWidth = resizableCtn.current.getBoundingClientRect().width - deltaX
-                leftOffSet = resizableCtn.current.getBoundingClientRect().left + deltaX
-                if (newWidth >= minSize && leftOffSet > 0) {
-                  resizableCtn.current.style.width = `${newWidth}px`;
-                  resizableCtn.current.style.left = `${leftOffSet}px`
-                }
-                newHeight = e.clientY - resizableCtn.current.getBoundingClientRect().top
-                if (newHeight >= minSize) {
-                  resizableCtn.current.style.height = `${newHeight}px`;
-                }
-                break;
-            case 'top-right':
-                newWidth = e.clientX - resizableCtn.current.getBoundingClientRect().left
-                if (newWidth > minSize) {
-                  resizableCtn.current.style.width = `${newWidth}px`;
-                }
-                newHeight = resizableCtn.current.getBoundingClientRect().height - deltaY
-                topOffSet = resizableCtn.current.getBoundingClientRect().top + deltaY
-                if (newHeight >= minSize && topOffSet > 0) {
-                  resizableCtn.current.style.height = `${newHeight}px`;
-                  resizableCtn.current.style.top = `${topOffSet}px`
-                }
-                break;
-            case 'bottom-right':
-                newWidth = e.clientX - resizableCtn.current.getBoundingClientRect().left
-                if (newWidth > minSize) {
-                  resizableCtn.current.style.width = `${newWidth}px`;
-                }
-                newHeight = e.clientY - resizableCtn.current.getBoundingClientRect().top
-                if (newHeight >= minSize) {
-                  resizableCtn.current.style.height = `${newHeight}px`;
-                }
-                break;  
-      }
+  
+  const handleResize = useCallback((newWidth, leftOffset, newHeight, topOffset) => {
+    if (newWidth >= minSize && leftOffset >= 0) {
+      resizableCtn.current.style.width = `${newWidth}px`;
+      resizableCtn.current.style.left = `${leftOffset}px`;
     }
-  };
+  
+    if (newHeight >= minSize && topOffset >= 0) {
+      resizableCtn.current.style.height = `${newHeight}px`;
+      resizableCtn.current.style.top = `${topOffset}px`;
+    }
+  },[minSize])
+
+  const handleDirection = useCallback((bound, deltaX, deltaY) => {
+    switch (resizeParams.direction) {
+      case "left":
+        handleResize(bound.width - deltaX, bound.left + deltaX, bound.height, bound.top);
+        break;
+      case "right":
+        handleResize(deltaX, bound.left, bound.height, bound.top);
+        break;
+      case "top":
+        handleResize(bound.width, bound.left, bound.height - deltaY, bound.top + deltaY);
+        break;
+      case "bottom":
+        handleResize(bound.width, bound.left, deltaY, bound.top);
+        break;
+      case "top-left":
+        handleResize(bound.width - deltaX, bound.left + deltaX, bound.height - deltaY, bound.top + deltaY);
+        break;
+      case "bottom-left":
+        handleResize(bound.width - deltaX, bound.left + deltaX, deltaY, bound.top);
+        break;
+      case "top-right":
+        handleResize(deltaX, bound.left, bound.height - deltaY, bound.top + deltaY);
+        break;
+      case "bottom-right":
+        handleResize(deltaX, bound.left, deltaY, bound.top);
+        break;
+      default:
+        throw new Error("");
+    }
+  },[resizeParams.direction, handleResize])
+
+  const handleMouseMove = useCallback(
+    (e) => {
+      const bound = resizableCtn.current.getBoundingClientRect();
+      let newWidth = bound.width;
+      let newHeight = bound.height;
+      let leftOffset = bound.left;
+      let topOffset = bound.top;
+      console.log({newWidth, newHeight, leftOffset, topOffset})
+      if (resizeParams.isResizing) {
+        const deltaX = e.clientX - leftOffset;
+        const deltaY = e.clientY - topOffset;
+        handleDirection(bound, deltaX, deltaY)
+      }
+    },
+    [resizeParams.isResizing, handleDirection]
+  );
 
   const handleMouseUp = () => {
     setResizeParams({
@@ -119,20 +85,16 @@ export const useResizable = (minSize = 150) => {
   };
 
   useEffect(() => {
-    const cleanup = () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-    };
-
+    // подписка по рефу
     if (resizeParams.isResizing) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
     }
-
-    return cleanup;
-  }, [resizeParams.isResizing]);
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+  };
+  }, [handleMouseMove, resizeParams.isResizing]);
 
   return { resizableCtn, handleMouseDown };
 };
-
-
