@@ -26,7 +26,6 @@ export const ResizableWindow = () => {
         onMouseDown={(e) => handleMouseDown("left", e)}
       />
       <div className="content-ctn">
-        {/* должен быть children */}
         <div className="brick" />
         <div className="brick" />
         <div className="brick" />

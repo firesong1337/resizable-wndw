@@ -6,16 +6,16 @@
       "tl t tr"
       "l cont r"
       "bl b br";
-    grid-template-rows: 10px auto 10px;
-    grid-template-columns: 10px auto 10px;
+    grid-template-rows: 2px auto 2px;
+    grid-template-columns: 2px auto 2px;
     position: absolute;
   }
   
   .resizable {
     user-select: none;
+    background-color: dimgrey;
   }
   
-  /* Видос в беседе */
   .resizable-tl {
     grid-area: "tl";
     cursor: nwse-resize;
@@ -35,7 +35,6 @@
   .content-ctn {
     grid-area: "cont";
     background-color: aquamarine;
-    margin: 20px;
   }
   .resizable-r {
     grid-area: "r";
@@ -53,18 +52,7 @@
     grid-area: "br";
     cursor: nwse-resize;
   }
-  .resizable-l,
-  .resizable-t,
-  .resizable-r,
-  .resizable-b {
-    background-color: dimgrey;
-  }
-  .resizable-tl,
-  .resizable-tr,
-  .resizable-bl,
-  .resizable-br {
-    background-color: chartreuse;
-  }
+  
   .brick {
     background-color: red;
     width: 10%;

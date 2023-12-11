@@ -4,7 +4,6 @@ import { useState, useRef, useEffect, useCallback } from "react";
 export const useResizable = (minSize = 150) => {
   const resizableCtn = useRef(null);
 
-  // попытаться отказаться от useState
   const [resizeParams, setResizeParams] = useState({
     isResizing: false,
     direction: null,
@@ -85,7 +84,6 @@ export const useResizable = (minSize = 150) => {
   };
 
   useEffect(() => {
-    // подписка по рефу
     if (resizeParams.isResizing) {
       document.addEventListener("mousemove", handleMouseMove);
       document.addEventListener("mouseup", handleMouseUp);
